@@ -551,13 +551,31 @@
 
         <div class="contact-visual">
           <h3>Send a message</h3>
-          <form action="https://api.web3forms.com/submit" method="POST">
-  <input type="hidden" name="access_key" value="e8be955d-e32d-46fe-bc58-d190a1b5d8d8">
-  <input type="text" name="name" required>
-  <input type="email" name="email" required>
-  <textarea name="message" required></textarea>
-  <button type="submit">Submit</button>
-</form>
+          <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="e8be955d-e32d-46fe-bc58-d190a1b5d8d8" />
+            <input type="hidden" name="subject" value="New inquiry from huddonconsulting.com" />
+            <input type="hidden" name="from_name" value="Huddon Website" />
+            <input type="hidden" name="redirect" value="https://www.huddonconsulting.com#contact" />
+            <!-- Honeypot spam prevention -->
+            <input type="checkbox" name="botcheck" class="sr-only" style="display:none" tabindex="-1" autocomplete="off" />
+            <div class="form-group">
+              <label class="form-label" for="name">Name</label>
+              <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="company">Company</label>
+              <input class="form-input" type="text" id="company" name="company" placeholder="Company name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="email">Email</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="your@email.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="message">How can we help?</label>
+              <textarea class="form-input" id="message" name="message" placeholder="Tell us about your production accounting needs..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit" id="submitBtn">Send Message</button>
+            <p class="form-status" id="formStatus"></p>
           </form>
         </div>
       </div>
@@ -635,6 +653,52 @@
         }
       });
     });
+
+    // Contact form — Web3Forms submission with AJAX
+    (function () {
+      var form = document.getElementById('contactForm');
+      var btn = document.getElementById('submitBtn');
+      var status = document.getElementById('formStatus');
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+        status.textContent = '';
+        status.className = 'form-status';
+
+        var data = new FormData(form);
+
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: data
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (json) {
+          if (json.success) {
+            btn.textContent = 'Message Sent';
+            btn.style.background = 'var(--color-success)';
+            status.textContent = 'Thank you — we will be in touch shortly.';
+            status.className = 'form-status success';
+            form.reset();
+            setTimeout(function () {
+              btn.textContent = 'Send Message';
+              btn.style.background = '';
+              btn.disabled = false;
+            }, 4000);
+          } else {
+            throw new Error(json.message || 'Submission failed');
+          }
+        })
+        .catch(function (err) {
+          btn.textContent = 'Send Message';
+          btn.disabled = false;
+          status.textContent = 'Something went wrong. Please try again or email us directly.';
+          status.className = 'form-status error';
+        });
+      });
+    })();
   </script>
 
 </body>
