@@ -1227,3 +1227,53 @@ textarea.form-input {
 /* --- UTILITIES --- */
 .text-center { text-align: center; }
 .mx-auto { margin-inline: auto; }
+/* --- CLIENT LOGOS --- */
+.clients-bar {
+  background: #1B2A3B;
+  padding: 2.5rem 1rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.clients-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.clients-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5A6370;
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+.clients-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem 3rem;
+}
+.client-logo {
+  flex-shrink: 0;
+}
+.client-logo img {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.7;
+  transition: opacity 180ms ease;
+}
+.client-logo img:hover {
+  opacity: 1;
+}
+
+/* Mobile — smaller logos, tighter spacing */
+@media (max-width: 640px) {
+  .clients-logos {
+    gap: 1.25rem 2rem;
+  }
+  .client-logo img {
+    height: 28px;
+  }
+}
